@@ -5,21 +5,26 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Success(
-    @Json(name = "id")
-    val id: String,
 
-    @Json(name = "name")
-    val name: String,
+    @Json(name = "activity")
+    val activity: String? = null,
 
-    @Json(name = "avatar")
-    val avatar: String
+
+    @Json(name = "link")
+    val link: String? = null,
+
+
+    @Json(name = "price")
+    val price: Double? = null,
+
+    @Json(name = "error")
+    val error: String? = null
 )
 
 @JsonClass(generateAdapter = true)
 data class Error(
-    @Json(name = "status")
-    val status: String,
 
-    @Json(name = "message")
-    val message: String
+    @Json(name = "error")
+    val error: String? = null
+
 )

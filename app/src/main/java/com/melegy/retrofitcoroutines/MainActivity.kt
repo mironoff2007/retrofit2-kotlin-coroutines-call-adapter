@@ -9,11 +9,11 @@ import com.squareup.moshi.Moshi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import retrofit2.http.GET
-
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,26 +27,30 @@ class MainActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             val response1 = service.getSuccess()
-            when (response1) {
-                is NetworkResponse.Success -> Log.d(TAG, "Success ${response1.body.name}")
-                is NetworkResponse.ApiError -> Log.d(TAG, "ApiError ${response1.body.message}")
-                is NetworkResponse.NetworkError -> Log.d(TAG, "NetworkError")
-                is NetworkResponse.UnknownError -> Log.d(TAG, "UnknownError")
-            }
+            logResult(response1)
 
             val response2 = service.getError()
-            when (response2) {
-                is NetworkResponse.Success -> Log.d(TAG, "Success ${response2.body.name}")
-                is NetworkResponse.ApiError -> Log.d(TAG, "ApiError ${response2.body.message}")
-                is NetworkResponse.NetworkError -> Log.d(TAG, "NetworkError")
-                is NetworkResponse.UnknownError -> Log.d(TAG, "UnknownError")
-            }
+            logResult(response2)
+        }
+    }
 
+    fun logResult(response: NetworkResponse<Success, Error>){
+        when (response) {
+            is NetworkResponse.Success ->
+                if (response.body.error == null) {
+                    Log.d(TAG, "Success ${response.body.activity}")
+                }
+                else {
+                    Log.d(TAG, "Error ${response.body.error}")
+                }
+            is NetworkResponse.ApiError -> Log.d(TAG, "ApiError ${response.body.error}")
+            is NetworkResponse.NetworkError -> Log.d(TAG, "NetworkError ${response.error}")
+            is NetworkResponse.UnknownError -> Log.d(TAG, "UnknownError ${response.error}")
         }
     }
 
     interface ApiService {
-        @GET("success")
+        @GET("activity")
         suspend fun getSuccess(): NetworkResponse<Success, Error>
 
         @GET("error")
@@ -55,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun createRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://retroftcoroutines.free.beeceptor.com/")
+            .baseUrl("https://www.boredapi.com/api/")
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(client)
