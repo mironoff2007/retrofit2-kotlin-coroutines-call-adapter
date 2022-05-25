@@ -5,13 +5,11 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.melegy.retrofitcoroutines.remote.NetworkResponse
 import com.melegy.retrofitcoroutines.remote.NetworkResponseAdapterFactory
-import com.squareup.moshi.Moshi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
-import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.create
 import retrofit2.http.GET
 class MainActivity : AppCompatActivity() {
@@ -20,9 +18,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val moshi = Moshi.Builder().build()
         val okHttpClient = OkHttpClient.Builder().build()
-        val retrofit = createRetrofit(moshi, okHttpClient)
+        val retrofit = createRetrofit(okHttpClient)
         val service = retrofit.create<ApiService>()
 
         GlobalScope.launch {
@@ -57,11 +54,11 @@ class MainActivity : AppCompatActivity() {
         suspend fun getError(): NetworkResponse<Success, Error>
     }
 
-    private fun createRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit {
+    private fun createRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://www.boredapi.com/api/")
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(JacksonConverterFactory.create())
             .client(client)
             .build()
     }

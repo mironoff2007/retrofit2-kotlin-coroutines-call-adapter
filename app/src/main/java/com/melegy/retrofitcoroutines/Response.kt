@@ -1,30 +1,30 @@
 package com.melegy.retrofitcoroutines
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
 
-@JsonClass(generateAdapter = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class Success(
 
-    @Json(name = "activity")
+    @field:JsonProperty("activity")
     val activity: String? = null,
 
 
-    @Json(name = "link")
+    @field:JsonProperty("link")
     val link: String? = null,
 
 
-    @Json(name = "price")
+    @field:JsonProperty("price")
     val price: Double? = null,
 
-    @Json(name = "error")
+    @field:JsonProperty("error")
     val error: String? = null
 )
 
-@JsonClass(generateAdapter = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class Error(
 
-    @Json(name = "error")
+    @field:JsonProperty("error")
     val error: String? = null
 
 )
