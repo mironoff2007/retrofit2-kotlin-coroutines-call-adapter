@@ -1,30 +1,26 @@
 package com.melegy.retrofitcoroutines
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
-data class Success(
-
-    @Json(name = "activity")
-    val activity: String? = null,
+import com.google.gson.annotations.SerializedName
 
 
-    @Json(name = "link")
-    val link: String? = null,
+data class Fact(
 
+    @SerializedName("fact")
+    val fact: String? = null,
 
-    @Json(name = "price")
-    val price: Double? = null,
+    @SerializedName("length")
+    val length: Int? = null,
 
-    @Json(name = "error")
+    @SerializedName("error")
     val error: String? = null
 )
 
-@JsonClass(generateAdapter = true)
 data class Error(
 
-    @Json(name = "error")
-    val error: String? = null
+    @SerializedName("code")
+    val error: String? = null,
+
+    @SerializedName("message")
+    val message: String? = null
 
 )
